@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absensi Pusaka Sakti Muda Terate</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px #0001;
+}
+
+header {
+    text-align: center;
+    background: #14532d;
+    color: white;
+    padding: 24px 12px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+}
+
+header h1 {
+    margin: 0 0 10px;
+    font-size: 25px;
+}
+
+header p { margin: 5px 0; }
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.card {
+    padding: 16px;
+    text-align: center;
+    background: #ecfdf5;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+}
+
+.card span {
+    display: block;
+    font-size: 26px;
+    font-weight: bold;
+    margin-top: 8px;
+    color: #166534;
+}
+
+h2 {
+    font-size: 19px;
+    margin-top: 24px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.toolbar input { flex: 1; min-width: 180px; }
+
+button {
+    background: #166534;
+    color: white;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover { opacity: .85; }
+.danger { background: #b91c1c; }
+.secondary { background: #475569; }
+.blue { background: #1d4ed8; }
+
+.table-wrap { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+th, td {
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    text-align: center;
+}
+
+th {
+    background: #14532d;
+    color: white;
+}
+
+tbody tr:nth-child(even) { background: #f8fafc; }
+
+.status-Hadir { color: #15803d; font-weight: bold; }
+.status-Izin { color: #b45309; font-weight: bold; }
+.status-Sakit { color: #1d4ed8; font-weight: bold; }
+.status-Alfa { color: #b91c1c; font-weight: bold; }
+
+small {
+    display: block;
+    color: #64748b;
+    margin-top: 14px;
+}
+
+@media(max-width:700px) {
+    body { padding: 8px; }
+    .container { padding: 13px; }
+    .info, .form-grid { grid-template-columns: 1fr; }
+    .summary { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+    body { padding: 0; background: white; }
+    .container { box-shadow: none; padding: 0; }
+    .no-print, .action-col { display: none !important; }
+    header { background: white; color: black; border: 1px solid black; }
+    th { background: #ddd !important; color: black; }
+    input, select { border: none; appearance: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <h1>PADEPOKAN PENCAK SILAT</h1>
+    <h1>PUSAKA SAKTI MUDA TERATE</h1>
+    <p>BUKU ABSENSI ANGGOTA DAN PELATIH</p>
+</header>
+
+<div class="info">
+    <div>
+        <label for="latihan">Nama Kegiatan</label>
+        <input id="latihan" value="Latihan Rutin">
+    </div>
+    <div>
+        <label for="tanggal">Tanggal Latihan</label>
+        <input id="tanggal" type="date">
+    </div>
+    <div>
+        <label for="lokasi">Tempat Latihan</label>
+        <input id="lokasi" placeholder="Masukkan tempat latihan">
+    </div>
+</div>
+
+<div class="summary">
+    <div class="card">Hadir<span id="hadir">0</span></div>
+    <div class="card">Izin<span id="izin">0</span></div>
+    <div class="card">Sakit<span id="sakit">0</span></div>
+    <div class="card">Alfa<span id="alfa">0</span></div>
+</div>
+
+<section class="no-print">
+    <h2>Tambah Anggota atau Pelatih</h2>
+    <div class="form-grid">
+        <div>
+            <label for="nomor">Nomor Anggota / ID</label>
+            <input id="nomor" placeholder="Contoh: PS001">
+        </div>
+        <div>
+            <label for="nama">Nama Lengkap</label>
+            <input id="nama" placeholder="Nama anggota atau pelatih">
+        </div>
+        <div>
+            <label for="peran">Jabatan</label>
+            <select id="peran">
+                <option value="Anggota">Anggota</option>
+                <option value="Pelatih">Pelatih</option>
+            </select>
+        </div>
+    </div>
+    <button onclick="tambahData()">+ Tambah Data</button>
+</section>
+
+<h2>Daftar Kehadiran</h2>
+
+<div class="toolbar no-print">
+    <input id="cari" placeholder="Cari nama, nomor, atau jabatan..."
+           oninput="tampilkan()">
+
+    <button class="blue" onclick="simpan()">Simpan Absensi</button>
+    <button class="secondary" onclick="cetak()">Cetak Laporan</button>
+    <button onclick="unduhCSV()">Unduh CSV</button>
+</div>
+
+<div class="table-wrap">
+<table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nomor Anggota</th>
+            <th>Nama Lengkap</th>
+            <th>Jabatan</th>
+            <th>Status Kehadiran</th>
+            <th>Keterangan</th>
+            <th class="action-col no-print">Aksi</th>
+        </tr>
+    </thead>
+    <tbody id="daftar"></tbody>
+</table>
+</div>
+
+<small>
+    Data absensi tersimpan pada browser di perangkat ini.
+    Simpan atau unduh laporan secara berkala.
+</small>
+
+</div>
+
+<script>
+const kunci = "absensiPusakaSaktiMudaTerate_v1";
+
+let data = muat();
+
+function muat() {
+    try {
+        const hasil = localStorage.getItem(kunci);
+        return hasil ? JSON.parse(hasil) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function simpan() {
+    try {
+        localStorage.setItem(kunci, JSON.stringify(data));
+        alert("Data absensi berhasil disimpan di browser!");
+    } catch (e) {
+        alert("Data gagal disimpan. Silakan unduh laporan CSV.");
+    }
+}
+
+function tambahData() {
+    const nomor = document.getElementById("nomor").value.trim();
+    const nama = document.getElementById("nama").value.trim();
+    const peran = document.getElementById("peran").value;
+
+    if (!nomor || !nama) {
+        alert("Nomor anggota dan nama harus diisi!");
+        return;
+    }
+
+    if (data.some(x => x.nomor.toLowerCase() === nomor.toLowerCase())) {
+        alert("Nomor anggota sudah terdaftar!");
+        return;
+    }
+
+    data.push({
+        nomor,
+        nama,
+        peran,
+        status: "Hadir",
+        keterangan: ""
+    });
+
+    document.getElementById("nomor").value = "";
+    document.getElementById("nama").value = "";
+
+    simpanDiam();
+    tampilkan();
+}
+
+function simpanDiam() {
+    try {
+        localStorage.setItem(kunci, JSON.stringify(data));
+    } catch (e) {
+        alert("Penyimpanan browser gagal.");
+    }
+}
+
+function tampilkan() {
+    const tbody = document.getElementById("daftar");
+    const cari = document.getElementById("cari").value.toLowerCase();
+
+    tbody.replaceChildren();
+
+    const jumlah = { Hadir: 0, Izin: 0, Sakit: 0, Alfa: 0 };
+
+    data.forEach(x => {
+        if (jumlah[x.status] !== undefined) jumlah[x.status]++;
+    });
+
+    document.getElementById("hadir").textContent = jumlah.Hadir;
+    document.getElementById("izin").textContent = jumlah.Izin;
+    document.getElementById("sakit").textContent = jumlah.Sakit;
+    document.getElementById("alfa").textContent = jumlah.Alfa;
+
+    const hasil = data.filter(x =>
+        [x.nomor, x.nama, x.peran].some(v =>
+            v.toLowerCase().includes(cari)
+        )
+    );
+
+    hasil.forEach((x, index) => {
+        const tr = document.createElement("tr");
+
+        function cell(teks) {
+            const td = document.createElement("td");
+            td.textContent = teks;
+            tr.appendChild(td);
+            return td;
+        }
+
+        cell(index + 1);
+        cell(x.nomor);
+        cell(x.nama);
+        cell(x.peran);
+
+        const tdStatus = document.createElement("td");
+        const select = document.createElement("select");
+
+        ["Hadir", "Izin", "Sakit", "Alfa"].forEach(s => {
+            const option = document.createElement("option");
+            option.value = s;
+            option.textContent = s;
+            select.appendChild(option);
+        });
+
+        select.value = x.status;
+        select.className = "status-" + x.status;
+
+        select.addEventListener("change", () => {
+            x.status = select.value;
+            simpanDiam();
+            tampilkan();
+        });
+
+        tdStatus.appendChild(select);
+        tr.appendChild(tdStatus);
+
+        const tdKet = document.createElement("td");
+        const ket = document.createElement("input");
+        ket.placeholder = "Keterangan";
+        ket.value = x.keterangan || "";
+
+        ket.addEventListener("change", () => {
+            x.keterangan = ket.value;
+            simpanDiam();
+        });
+
+        tdKet.appendChild(ket);
+        tr.appendChild(tdKet);
+
+        const tdAksi = document.createElement("td");
+        tdAksi.className = "action-col no-print";
+
+        const hapus = document.createElement("button");
+        hapus.textContent = "Hapus";
+        hapus.className = "danger";
+
+        hapus.onclick = () => {
+            if (confirm("Hapus data " + x.nama + "?")) {
+                data = data.filter(item => item !== x);
+                simpanDiam();
+                tampilkan();
+            }
+        };
+
+        tdAksi.appendChild(hapus);
+        tr.appendChild(tdAksi);
+
+        tbody.appendChild(tr);
+    });
+}
+
+function cetak() {
+    simpanDiam();
+    window.print();
+}
+
+function unduhCSV() {
+    const tanggal = document.getElementById("tanggal").value;
+    const kegiatan = document.getElementById("latihan").value;
+    const lokasi = document.getElementById("lokasi").value;
+
+    const baris = [
+        ["Padepokan Pencak Silat Pusaka Sakti Muda Terate"],
+        ["Kegiatan", kegiatan],
+        ["Tanggal", tanggal],
+        ["Tempat", lokasi],
+        [],
+        ["No", "Nomor Anggota", "Nama", "Jabatan",
+         "Status", "Keterangan"],
+        ...data.map((x, i) => [
+            i + 1, x.nomor, x.nama, x.peran, x.status, x.keterangan
+        ])
+    ];
+
+    const escapeCSV = v =>
+        '"' + String(v ?? "").replace(/"/g, '""') + '"';
+
+    const isi = "\uFEFF" + baris.map(row =>
+        row.map(escapeCSV).join(",")
+    ).join("\r\n");
+
+    const blob = new Blob([isi], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "absensi-pusaka-sakti-" + (tanggal || "laporan") + ".csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+document.getElementById("tanggal").value =
+    new Date().toLocaleDateString("en-CA");
+
+tampilkan();
+</script>
+</body>
+</html>
